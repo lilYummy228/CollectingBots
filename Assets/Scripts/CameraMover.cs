@@ -5,11 +5,10 @@ public class CameraMover : MonoBehaviour
     private const float Direction = 1f;
 
     [SerializeField] private float _moveSpeed;
-    [SerializeField] private Terrain _terrain;
+    [SerializeField] private Map _map;
 
     private PlayerInput _playerInput;
-    private Vector2 _moveDirection;
-    private float _borderOffset = 50f;
+    private Vector2 _moveDirection;    
 
     private void Awake() => _playerInput = new PlayerInput();
 
@@ -37,13 +36,13 @@ public class CameraMover : MonoBehaviour
 
     private void MoveByBound()
     {
-        if (transform.position.x <= _borderOffset)
+        if (transform.position.x <= _map.BoundsX)
             _moveDirection.x = Direction;
-        else if (transform.position.x >= _terrain.terrainData.size.x - _borderOffset)
+        else if (transform.position.x >= _map.BoundsZ)
             _moveDirection.x = -Direction;
-        else if (transform.position.z <= _borderOffset)
+        else if (transform.position.z <= _map.BoundsX)
             _moveDirection.y = Direction;
-        else if (transform.position.z >= _terrain.terrainData.size.z - _borderOffset)
+        else if (transform.position.z >= _map.BoundsZ)
             _moveDirection.y = -Direction;
     }
 }
