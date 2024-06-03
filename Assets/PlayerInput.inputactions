@@ -72,6 +72,34 @@
                     "isPartOfComposite": true
                 }
             ]
+        },
+        {
+            "name": "Base",
+            "id": "d4b81cf4-a793-49e2-a4b7-03f2b082988d",
+            "actions": [
+                {
+                    "name": "Scan",
+                    "type": "Button",
+                    "id": "976b380f-ab9c-4eca-950d-e20deb6b5eab",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "3c7d7e30-d0b2-4a98-b9b9-dcfe2d0600e1",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard and Mouse",
+                    "action": "Scan",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

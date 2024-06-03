@@ -419,6 +419,7 @@ GameObject:
   m_Component:
   - component: {fileID: 513047871}
   - component: {fileID: 513047870}
+  - component: {fileID: 513047872}
   m_Layer: 0
   m_Name: ResourceGenerator
   m_TagString: Untagged
@@ -439,10 +440,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _map: {fileID: 493461457}
-  _resources:
-  - {fileID: 11400000, guid: 7e10cd567fed0f54fa2ea511542b816f, type: 2}
-  - {fileID: 11400000, guid: c06d8129d51ecea4584bb51f226c793b, type: 2}
-  - {fileID: 11400000, guid: b7f882bfdd3e7b641bbaeb84fdc8d608, type: 2}
+  _pool: {fileID: 513047872}
+  _base: {fileID: 1599781499}
   _spawnDelay: 6
 --- !u!4 &513047871
 Transform:
@@ -453,12 +452,29 @@ Transform:
   m_GameObject: {fileID: 513047869}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 110.72421, y: 7.3493423, z: 90.45692}
+  m_LocalPosition: {x: 125, y: 0, z: 125}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &513047872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 513047869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44fb44a196db36f48a28c77815530927, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _resources:
+  - {fileID: 11400000, guid: 7e10cd567fed0f54fa2ea511542b816f, type: 2}
+  - {fileID: 11400000, guid: c06d8129d51ecea4584bb51f226c793b, type: 2}
+  - {fileID: 11400000, guid: b7f882bfdd3e7b641bbaeb84fdc8d608, type: 2}
+  _container: {fileID: 513047871}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -5828,10 +5844,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2df50fd43e2563046bc6edd2a3a9f5bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _scanEffect: {fileID: 839858410}
   _bots:
   - {fileID: 1814457837}
   - {fileID: 440224292}
   - {fileID: 1513190924}
+  _cooldownTime: 5
 --- !u!1 &1814457836
 GameObject:
   m_ObjectHideFlags: 0

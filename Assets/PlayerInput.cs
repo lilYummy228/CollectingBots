@@ -94,6 +94,34 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""Base"",
+            ""id"": ""d4b81cf4-a793-49e2-a4b7-03f2b082988d"",
+            ""actions"": [
+                {
+                    ""name"": ""Scan"",
+                    ""type"": ""Button"",
+                    ""id"": ""976b380f-ab9c-4eca-950d-e20deb6b5eab"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""3c7d7e30-d0b2-4a98-b9b9-dcfe2d0600e1"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Scan"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -118,6 +146,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         // Camera
         m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
         m_Camera_Move = m_Camera.FindAction("Move", throwIfNotFound: true);
+        // Base
+        m_Base = asset.FindActionMap("Base", throwIfNotFound: true);
+        m_Base_Scan = m_Base.FindAction("Scan", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -221,6 +252,52 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         }
     }
     public CameraActions @Camera => new CameraActions(this);
+
+    // Base
+    private readonly InputActionMap m_Base;
+    private List<IBaseActions> m_BaseActionsCallbackInterfaces = new List<IBaseActions>();
+    private readonly InputAction m_Base_Scan;
+    public struct BaseActions
+    {
+        private @PlayerInput m_Wrapper;
+        public BaseActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Scan => m_Wrapper.m_Base_Scan;
+        public InputActionMap Get() { return m_Wrapper.m_Base; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(BaseActions set) { return set.Get(); }
+        public void AddCallbacks(IBaseActions instance)
+        {
+            if (instance == null || m_Wrapper.m_BaseActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_BaseActionsCallbackInterfaces.Add(instance);
+            @Scan.started += instance.OnScan;
+            @Scan.performed += instance.OnScan;
+            @Scan.canceled += instance.OnScan;
+        }
+
+        private void UnregisterCallbacks(IBaseActions instance)
+        {
+            @Scan.started -= instance.OnScan;
+            @Scan.performed -= instance.OnScan;
+            @Scan.canceled -= instance.OnScan;
+        }
+
+        public void RemoveCallbacks(IBaseActions instance)
+        {
+            if (m_Wrapper.m_BaseActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IBaseActions instance)
+        {
+            foreach (var item in m_Wrapper.m_BaseActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_BaseActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public BaseActions @Base => new BaseActions(this);
     private int m_KeyboardandMouseSchemeIndex = -1;
     public InputControlScheme KeyboardandMouseScheme
     {
@@ -233,5 +310,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     public interface ICameraActions
     {
         void OnMove(InputAction.CallbackContext context);
+    }
+    public interface IBaseActions
+    {
+        void OnScan(InputAction.CallbackContext context);
     }
 }
