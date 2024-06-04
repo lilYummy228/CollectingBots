@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6274533917598824478}
   - component: {fileID: 228757836141002414}
   - component: {fileID: 8171746215631865625}
+  - component: {fileID: -5001188978944099633}
   m_Layer: 0
   m_Name: Iron
   m_TagString: Untagged
@@ -128,8 +129,20 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-5001188978944099633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 444711097075634341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38c0f14df87e441458b9048972c6d9ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

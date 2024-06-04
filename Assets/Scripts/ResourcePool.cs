@@ -1,20 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPool : MonoBehaviour
+public class ResourcePool : MonoBehaviour
 {
     [SerializeField] private Resource[] _resources;
     [SerializeField] private Transform _container;
 
-    private Queue<GameObject> _pool = new();
+    private Queue<Resource> _pool = new();
 
-    public GameObject GetResource()
+    public Resource GetResource()
     {
         if (_pool.Count == 0)
         {
             int resourceIndex = Random.Range(0, _resources.Length);
 
-            GameObject resource = Instantiate(_resources[resourceIndex].Prefab);
+            Resource resource = Instantiate(_resources[resourceIndex]);
             resource.transform.parent = _container;
             resource.gameObject.SetActive(false);
 
@@ -24,7 +24,7 @@ public class ObjectPool : MonoBehaviour
         return _pool.Dequeue();
     }
 
-    public void PutResource(GameObject resource)
+    public void PutResource(Resource resource)
     {
         _pool.Enqueue(resource);
         resource.gameObject.SetActive(false);

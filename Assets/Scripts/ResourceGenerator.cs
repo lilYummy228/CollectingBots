@@ -1,47 +1,45 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class ResourceGenerator : MonoBehaviour
 {
     [SerializeField] private Map _map;
-    [SerializeField] private ObjectPool _pool;
+    [SerializeField] private ResourcePool _pool;
     [SerializeField] private Base _base;
     [SerializeField] private float _spawnDelay;
+    [SerializeField] private int _spawnCount = 5;
 
-    private List<GameObject> _resources;
     private WaitForSeconds _delay;
 
-    private void Start()
+    public List<Resource> Resources;
+
+    private void Awake()
     {
         _delay = new WaitForSeconds(_spawnDelay);
-        _resources = new List<GameObject>();
+        Resources = new List<Resource>();
 
         StartCoroutine(nameof(SpawnResources));
     }
 
-    private void OnEnable()
-    {
-        _base.Scanned += ShowResources;
-    }
+    private void OnEnable() => _base.Scanned += ShowResources;
 
-    private void OnDisable()
-    {
-        _base.Scanned -= ShowResources;
-    }
+    private void OnDisable() => _base.Scanned -= ShowResources;
 
     private IEnumerator SpawnResources()
     {
         while (enabled)
         {
-            float spawnPointX = Random.Range(_map.BoundsX, _map.BoundsZ);
-            float spawnPointZ = Random.Range(_map.BoundsX, _map.BoundsZ);
-            Vector3 spawnPoint = new Vector3(spawnPointX, 0f, spawnPointZ);
+            for (int i = 0; i < _spawnCount; i++)
+            {
+                float spawnPointX = Random.Range(_map.BoundsX, _map.BoundsZ);
+                float spawnPointZ = Random.Range(_map.BoundsX, _map.BoundsZ);
+                Vector3 spawnPoint = new Vector3(spawnPointX, 0f, spawnPointZ);
 
-            GameObject resource = _pool.GetResource();
-            resource.transform.position = spawnPoint;
-            _resources.Add(resource);
+                Resource resource = _pool.GetResource();
+                resource.transform.position = spawnPoint;
+                Resources.Add(resource);
+            }
 
             yield return _delay;
         }
@@ -49,7 +47,13 @@ public class ResourceGenerator : MonoBehaviour
 
     private void ShowResources()
     {
-        foreach (GameObject resource in _resources)
-            resource.SetActive(true);
+        foreach (Resource resource in Resources)
+            resource.gameObject.SetActive(true);
+    }
+
+    public void RemoveResource(Resource resource)
+    {        
+        Resources.Remove(resource);
+        _pool.PutResource(resource);
     }
 }
