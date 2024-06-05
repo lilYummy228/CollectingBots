@@ -12,7 +12,7 @@ public class ResourceGenerator : MonoBehaviour
 
     private WaitForSeconds _delay;
 
-    public List<Resource> Resources;
+    public List<Resource> Resources {  get; private set; }
 
     private void Awake()
     {

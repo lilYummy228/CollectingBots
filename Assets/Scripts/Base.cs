@@ -59,7 +59,7 @@ public class Base : MonoBehaviour
                     {
                         foreach (Bot bot in _bots)
                         {
-                            if (bot.Coroutine == null)
+                            if (bot.ExplorationCoroutine == null)
                             {
                                 bot.StartExploration(resource);
                                 resource.Explore();

@@ -4,6 +4,7 @@ using UnityEngine;
 public abstract class Resource : MonoBehaviour
 {
     public bool IsExplored {  get; private set; }
+    public bool IsPicked { get; private set; }
 
     private void OnEnable()
     {
@@ -24,5 +25,10 @@ public abstract class Resource : MonoBehaviour
     public void Explore()
     {
         IsExplored = true;
+    }
+
+    public void Pick()
+    {
+        IsPicked = true;
     }
 }

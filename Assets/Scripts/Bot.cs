@@ -11,9 +11,11 @@ public class Bot : MonoBehaviour
     private Resource _grabbedResource;
     private WaitForFixedUpdate _waitForFixedUpdate;
 
-    public Coroutine Coroutine { get; private set; }
+    public Coroutine ExplorationCoroutine { get; private set; }
 
-    public IEnumerator GatherResource(Resource scannedResource)
+    public void StartExploration(Resource resource) => ExplorationCoroutine = StartCoroutine(GoAfterResource(resource));
+
+    public IEnumerator GoAfterResource(Resource scannedResource)
     {
         while (enabled)
         {
@@ -35,9 +37,15 @@ public class Bot : MonoBehaviour
         }
 
         _grabbedResource.PickUp(gameObject.transform, _holdDistance);
+        _grabbedResource.Pick();
 
+        StartCoroutine(GetBack());
+    }
+
+    private IEnumerator GetBack()
+    {
         while (_grabbedResource.isActiveAndEnabled)
-        {       
+        {
             transform.LookAt(_base.transform);
 
             transform.position =
@@ -48,8 +56,6 @@ public class Bot : MonoBehaviour
 
         _grabbedResource.Bring();
 
-        Coroutine = null;
+        ExplorationCoroutine = null;
     }
-
-    public void StartExploration(Resource resource) => Coroutine = StartCoroutine(GatherResource(resource));
 }
