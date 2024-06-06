@@ -18,9 +18,9 @@ public abstract class Resource : MonoBehaviour
         transform.localPosition = new Vector3(0f, 0f, holdDistance);
     }
 
-    public void Bring()
+    public void Bring(Transform container)
     {
-        transform.SetParent(null);
+        transform.SetParent(container);
     }
 
     public void Explore()

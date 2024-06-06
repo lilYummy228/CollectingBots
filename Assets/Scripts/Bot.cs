@@ -5,6 +5,7 @@ public class Bot : MonoBehaviour
 {
     [SerializeField] private float _moveSpeed;
     [SerializeField] private Base _base;
+    [SerializeField] private Transform _container;
 
     private float _lookDistance = 2.5f;
     private float _holdDistance = 1.5f;
@@ -54,7 +55,7 @@ public class Bot : MonoBehaviour
             yield return _waitForFixedUpdate;
         }
 
-        _grabbedResource.Bring();
+        _grabbedResource.Bring(_container);
 
         ExplorationCoroutine = null;
     }
