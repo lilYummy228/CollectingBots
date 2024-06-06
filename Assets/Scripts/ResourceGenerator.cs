@@ -45,15 +45,15 @@ public class ResourceGenerator : MonoBehaviour
         }
     }
 
-    private void ShowResources()
-    {
-        foreach (Resource resource in Resources)
-            resource.gameObject.SetActive(true);
-    }
-
     public void RemoveResource(Resource resource)
     {        
         Resources.Remove(resource);
         _pool.PutResource(resource);
+    }
+
+    private void ShowResources()
+    {
+        foreach (Resource resource in Resources)
+            resource.gameObject.SetActive(true);
     }
 }

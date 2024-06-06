@@ -9,6 +9,7 @@ public abstract class Resource : MonoBehaviour
     private void OnEnable()
     {
         IsExplored = false;
+        IsPicked = false;
     }
 
     public void PickUp(Transform parent, float holdDistance)

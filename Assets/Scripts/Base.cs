@@ -7,22 +7,20 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerInput))]
 public class Base : MonoBehaviour
 {
+    [SerializeField] private ResourceCounter _resourceCounter;
     [SerializeField] private ResourceGenerator _resourceGenerator;
     [SerializeField] private ParticleSystem _scanEffect;
     [SerializeField] private Bot[] _bots;
     [SerializeField] private float _cooldownTime = 6f;
 
-    private List<Resource> _receivedResources;
     private PlayerInput _playerInput;
+    private WaitForFixedUpdate _waitForFixedUpdate;
     private float _cooldown = 0f;
-    public int _resourcesCount;
 
     public event Action Scanned;
 
     private void Awake()
     {
-        _receivedResources = new List<Resource>();
-
         _playerInput = new PlayerInput();
         _playerInput.Base.Scan.performed += OnScan;
 
@@ -33,23 +31,11 @@ public class Base : MonoBehaviour
 
     private void OnDisable() => _playerInput.Disable();
 
-    public void OnScan(InputAction.CallbackContext context)
-    {
-        if (_cooldown <= Time.time)
-        {
-            _scanEffect.Play();
-
-            Scanned?.Invoke();
-
-            _cooldown = Time.time + _cooldownTime;
-        }
-    }
-
     private IEnumerator SendBots()
     {
         while (enabled)
         {
-            yield return new WaitForFixedUpdate();
+            yield return _waitForFixedUpdate;
 
             if (_resourceGenerator.Resources.Count > 0)
             {
@@ -77,9 +63,19 @@ public class Base : MonoBehaviour
         if (other.TryGetComponent(out Resource resource))
         {
             _resourceGenerator.RemoveResource(resource);
-            _receivedResources.Add(resource);
+            _resourceCounter.AddResource(resource);
+        }
+    }
 
-            _resourcesCount = _receivedResources.Count;
+    public void OnScan(InputAction.CallbackContext context)
+    {
+        if (_cooldown <= Time.time)
+        {
+            _scanEffect.Play();
+
+            Scanned?.Invoke();
+
+            _cooldown = Time.time + _cooldownTime;
         }
     }
 }

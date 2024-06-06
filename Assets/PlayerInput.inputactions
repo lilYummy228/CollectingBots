@@ -100,6 +100,22 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "UI",
+            "id": "582fc27e-75ec-4a01-bada-549ce0f60123",
+            "actions": [
+                {
+                    "name": "Count",
+                    "type": "Value",
+                    "id": "39c6c698-049d-424d-b628-07616e412d50",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": []
         }
     ],
     "controlSchemes": [
