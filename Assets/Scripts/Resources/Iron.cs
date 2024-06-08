@@ -1,4 +1,1 @@
-
-public class Iron : Resource 
-{ 
-}
+public class Iron : Resource { }

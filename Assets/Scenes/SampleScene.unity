@@ -376,8 +376,9 @@ MonoBehaviour:
   _map: {fileID: 493461457}
   _pool: {fileID: 1291873854}
   _base: {fileID: 1599781499}
-  _spawnDelay: 8
-  _spawnCount: 3
+  _spawnDelay: 6
+  _minSpawnCount: 0
+  _maxSpawnCount: 5
 --- !u!4 &513047871
 Transform:
   m_ObjectHideFlags: 0
@@ -1331,6 +1332,10 @@ PrefabInstance:
       value: Base
       objectReference: {fileID: 0}
     - target: {fileID: 8144036861044294114, guid: 80235f9100f02114884328c67ade0111, type: 3}
+      propertyPath: _bots.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8144036861044294114, guid: 80235f9100f02114884328c67ade0111, type: 3}
       propertyPath: _resourceCounter
       value: 
       objectReference: {fileID: 1673946763}
@@ -1348,6 +1353,14 @@ PrefabInstance:
       objectReference: {fileID: 514778977}
     - target: {fileID: 8144036861044294114, guid: 80235f9100f02114884328c67ade0111, type: 3}
       propertyPath: _bots.Array.data[2]
+      value: 
+      objectReference: {fileID: 219607729}
+    - target: {fileID: 8144036861044294114, guid: 80235f9100f02114884328c67ade0111, type: 3}
+      propertyPath: _bots.Array.data[3]
+      value: 
+      objectReference: {fileID: 219607729}
+    - target: {fileID: 8144036861044294114, guid: 80235f9100f02114884328c67ade0111, type: 3}
+      propertyPath: _bots.Array.data[4]
       value: 
       objectReference: {fileID: 219607729}
     - target: {fileID: 8480921289411581116, guid: 80235f9100f02114884328c67ade0111, type: 3}

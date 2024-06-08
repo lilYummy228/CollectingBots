@@ -6,18 +6,9 @@ public class ResourceCountView : MonoBehaviour
     [SerializeField] private ResourceCounter _resourceCounter;
     [SerializeField] private TextMeshProUGUI _count;
 
-    private void OnEnable()
-    {
-        _resourceCounter.ResourceAdded += ShowInfo;
-    }
+    private void OnEnable() => _resourceCounter.ResourceAdded += ShowInfo;
 
-    private void OnDisable()
-    {
-        _resourceCounter.ResourceAdded -= ShowInfo;
-    }
+    private void OnDisable() => _resourceCounter.ResourceAdded -= ShowInfo;
 
-    private void ShowInfo(int count)
-    {
-        _count.text = count.ToString();
-    }
+    private void ShowInfo(int count) => _count.text = count.ToString();
 }

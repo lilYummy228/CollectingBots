@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,13 +10,11 @@ public class Base : MonoBehaviour
     [SerializeField] private ResourceGenerator _resourceGenerator;
     [SerializeField] private ParticleSystem _scanEffect;
     [SerializeField] private Bot[] _bots;
-    [SerializeField] private float _cooldownTime = 6f;
+    [SerializeField, Range(0f, 6f)] private float _cooldownTime = 6f;
 
     private PlayerInput _playerInput;
     private WaitForFixedUpdate _waitForFixedUpdate;
     private float _cooldown = 0f;
-
-    public event Action Scanned;
 
     private void Awake()
     {
@@ -29,35 +26,6 @@ public class Base : MonoBehaviour
 
     private void OnEnable() => _playerInput.Enable();
 
-    private void OnDisable() => _playerInput.Disable();
-
-    private IEnumerator SendBots()
-    {
-        while (enabled)
-        {
-            yield return _waitForFixedUpdate;
-
-            if (_resourceGenerator.Resources.Count > 0)
-            {
-                foreach (Resource resource in _resourceGenerator.Resources)
-                {
-                    if (resource.isActiveAndEnabled && resource.IsExplored == false)
-                    {
-                        foreach (Bot bot in _bots)
-                        {
-                            if (bot.ExplorationCoroutine == null)
-                            {
-                                bot.StartExploration(resource);
-                                resource.Explore();
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out Resource resource))
@@ -67,15 +35,47 @@ public class Base : MonoBehaviour
         }
     }
 
+    private void OnDisable() => _playerInput.Disable();
+
+    private IEnumerator SendBots()
+    {
+        while (enabled)
+        {
+            if (_resourceGenerator.Resources.Count > 0)
+            {
+                Resource resource = _resourceGenerator.Resources[0];
+
+                if (resource.isActiveAndEnabled)
+                {
+                    foreach (Bot bot in _bots)
+                    {
+                        if (bot.ExplorationCoroutine == null)
+                        {
+                            bot.StartExploration(resource);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            yield return _waitForFixedUpdate;
+        }
+    }
+
     public void OnScan(InputAction.CallbackContext context)
     {
         if (_cooldown <= Time.time)
         {
             _scanEffect.Play();
 
-            Scanned?.Invoke();
+            _resourceGenerator.ShowResources();
 
             _cooldown = Time.time + _cooldownTime;
         }
+    }
+
+    public void TakeResource(Resource resource)
+    {
+        _resourceGenerator.Resources.Remove(resource);
     }
 }

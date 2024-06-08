@@ -9,54 +9,46 @@ public class Bot : MonoBehaviour
 
     private float _lookDistance = 2.5f;
     private float _holdDistance = 1.5f;
-    private Resource _grabbedResource;
     private WaitForFixedUpdate _waitForFixedUpdate;
 
     public Coroutine ExplorationCoroutine { get; private set; }
 
-    public void StartExploration(Resource resource) => ExplorationCoroutine = StartCoroutine(GoAfterResource(resource));
-
-    public IEnumerator GoAfterResource(Resource scannedResource)
+    private IEnumerator GatherResource(Resource resource)
     {
+        _base.TakeResource(resource);
+
         while (enabled)
         {
+            yield return _waitForFixedUpdate; 
+
             if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hitInfo, _lookDistance))
-            {
-                if (hitInfo.transform.TryGetComponent(out Resource exploredResource))
-                {
-                    _grabbedResource = exploredResource;
+                if (hitInfo.transform.TryGetComponent(out Resource foundResource) == resource)
                     break;
-                }
-            }
 
-            transform.LookAt(scannedResource.transform);
-
-            transform.position =
-                Vector3.MoveTowards(transform.position, scannedResource.transform.position, _moveSpeed * Time.deltaTime);
-
-            yield return _waitForFixedUpdate;
+            MoveTo(resource.transform);
         }
 
-        _grabbedResource.PickUp(gameObject.transform, _holdDistance);
-        _grabbedResource.Pick();
+        resource.PickUp(gameObject.transform, _holdDistance);
 
-        StartCoroutine(GetBack());
-    }
-
-    private IEnumerator GetBack()
-    {
-        while (_grabbedResource.isActiveAndEnabled)
+        while (resource.isActiveAndEnabled)
         {
-            transform.LookAt(_base.transform);
-
-            transform.position =
-                Vector3.MoveTowards(transform.position, _base.transform.position, _moveSpeed * Time.deltaTime);
+            MoveTo(_base.transform);
 
             yield return _waitForFixedUpdate;
         }
 
-        _grabbedResource.Bring(_container);
+        resource.Bring(_container); 
 
         ExplorationCoroutine = null;
+    }
+
+    public void StartExploration(Resource resource) => ExplorationCoroutine = StartCoroutine(GatherResource(resource));
+
+    private void MoveTo(Transform target)
+    {
+        transform.LookAt(target);
+
+        transform.position =
+            Vector3.MoveTowards(transform.position, target.position, _moveSpeed * Time.deltaTime);
     }
 }

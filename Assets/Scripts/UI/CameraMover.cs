@@ -4,7 +4,7 @@ public class CameraMover : MonoBehaviour
 {
     private const float Direction = 1f;
 
-    [SerializeField] private float _moveSpeed;
+    [SerializeField, Range(30f, 90f)] private float _moveSpeed = 60f;
     [SerializeField] private Map _map;
 
     private PlayerInput _playerInput;

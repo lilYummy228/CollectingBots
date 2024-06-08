@@ -7,12 +7,15 @@ public class ResourceGenerator : MonoBehaviour
     [SerializeField] private Map _map;
     [SerializeField] private ResourcePool _pool;
     [SerializeField] private Base _base;
-    [SerializeField] private float _spawnDelay;
-    [SerializeField] private int _spawnCount = 5;
+
+    [Header("Spawn Settings")]
+    [SerializeField, Range(1, 12)] private float _spawnDelay;
+    [SerializeField, Range(0, 1)] private int _minSpawnCount;
+    [SerializeField, Range(1, 5)] private int _maxSpawnCount;
 
     private WaitForSeconds _delay;
 
-    public List<Resource> Resources {  get; private set; }
+    public List<Resource> Resources { get; private set; }
 
     private void Awake()
     {
@@ -22,15 +25,13 @@ public class ResourceGenerator : MonoBehaviour
         StartCoroutine(nameof(SpawnResources));
     }
 
-    private void OnEnable() => _base.Scanned += ShowResources;
-
-    private void OnDisable() => _base.Scanned -= ShowResources;
-
     private IEnumerator SpawnResources()
     {
         while (enabled)
         {
-            for (int i = 0; i < _spawnCount; i++)
+            int spawnCount = Random.Range(_minSpawnCount, _maxSpawnCount + 1);
+
+            for (int i = 0; i < spawnCount; i++)
             {
                 float spawnPointX = Random.Range(_map.BoundsX, _map.BoundsZ);
                 float spawnPointZ = Random.Range(_map.BoundsX, _map.BoundsZ);
@@ -46,12 +47,11 @@ public class ResourceGenerator : MonoBehaviour
     }
 
     public void RemoveResource(Resource resource)
-    {        
-        Resources.Remove(resource);
+    {
         _pool.PutResource(resource);
     }
 
-    private void ShowResources()
+    public void ShowResources()
     {
         foreach (Resource resource in Resources)
             resource.gameObject.SetActive(true);
