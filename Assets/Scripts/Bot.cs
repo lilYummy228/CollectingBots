@@ -4,12 +4,18 @@ using UnityEngine;
 public class Bot : MonoBehaviour
 {
     [SerializeField] private float _moveSpeed;
-    [SerializeField] private Base _base;
-    [SerializeField] private Transform _container;
 
+    private WaitForFixedUpdate _waitForFixedUpdate;
+    private Transform _resourceContainer;
+    private Base _base;
     private float _lookDistance = 2.5f;
     private float _holdDistance = 1.5f;
-    private WaitForFixedUpdate _waitForFixedUpdate;
+
+    private void OnEnable()
+    {
+        _base = GameObject.Find("Base").GetComponent<Base>();
+        _resourceContainer = GameObject.Find("ResourcePool").GetComponent<Transform>();
+    }
 
     public Coroutine ExplorationCoroutine { get; private set; }
 
@@ -37,7 +43,7 @@ public class Bot : MonoBehaviour
             yield return _waitForFixedUpdate;
         }
 
-        resource.Bring(_container); 
+        resource.Bring(_resourceContainer); 
 
         ExplorationCoroutine = null;
     }

@@ -85,6 +85,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Spawn",
+                    "type": "Button",
+                    "id": "74cb5e95-c329-4093-9a57-5513c47fc2a3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -98,24 +107,19 @@
                     "action": "Scan",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8f7fd471-3b6f-4a7b-82f0-04a898eb46b4",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard and Mouse",
+                    "action": "Spawn",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
-        },
-        {
-            "name": "UI",
-            "id": "582fc27e-75ec-4a01-bada-549ce0f60123",
-            "actions": [
-                {
-                    "name": "Count",
-                    "type": "Value",
-                    "id": "39c6c698-049d-424d-b628-07616e412d50",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                }
-            ],
-            "bindings": []
         }
     ],
     "controlSchemes": [

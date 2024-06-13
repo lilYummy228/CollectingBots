@@ -4,22 +4,31 @@ using UnityEngine;
 
 public class ResourceCounter : MonoBehaviour
 {
-    private List<Resource> _receivedResources;
     private int _count;
 
     public event Action<int> ResourceAdded;
 
+    public List<Resource> ReceivedResources {  get; private set; }
+
     private void Awake()
     {
-        _receivedResources = new List<Resource>();
-        _count = _receivedResources.Count;
+        ReceivedResources = new List<Resource>();
+        _count = ReceivedResources.Count;
     }
 
     public void AddResource(Resource resource)
     {
-        _receivedResources.Add(resource);
+        ReceivedResources.Add(resource);
 
-        _count++;
+        _count = ReceivedResources.Count;
+        ResourceAdded?.Invoke(_count);
+    }
+
+    public void RemoveResource(int count)
+    {
+        ReceivedResources.RemoveRange(0, count);
+
+        _count = ReceivedResources.Count;
         ResourceAdded?.Invoke(_count);
     }
 }

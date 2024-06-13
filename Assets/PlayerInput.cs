@@ -107,6 +107,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Spawn"",
+                    ""type"": ""Button"",
+                    ""id"": ""74cb5e95-c329-4093-9a57-5513c47fc2a3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -120,24 +129,19 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Scan"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8f7fd471-3b6f-4a7b-82f0-04a898eb46b4"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Spawn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
-        },
-        {
-            ""name"": ""UI"",
-            ""id"": ""582fc27e-75ec-4a01-bada-549ce0f60123"",
-            ""actions"": [
-                {
-                    ""name"": ""Count"",
-                    ""type"": ""Value"",
-                    ""id"": ""39c6c698-049d-424d-b628-07616e412d50"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                }
-            ],
-            ""bindings"": []
         }
     ],
     ""controlSchemes"": [
@@ -165,9 +169,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         // Base
         m_Base = asset.FindActionMap("Base", throwIfNotFound: true);
         m_Base_Scan = m_Base.FindAction("Scan", throwIfNotFound: true);
-        // UI
-        m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
-        m_UI_Count = m_UI.FindAction("Count", throwIfNotFound: true);
+        m_Base_Spawn = m_Base.FindAction("Spawn", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -276,11 +278,13 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Base;
     private List<IBaseActions> m_BaseActionsCallbackInterfaces = new List<IBaseActions>();
     private readonly InputAction m_Base_Scan;
+    private readonly InputAction m_Base_Spawn;
     public struct BaseActions
     {
         private @PlayerInput m_Wrapper;
         public BaseActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Scan => m_Wrapper.m_Base_Scan;
+        public InputAction @Spawn => m_Wrapper.m_Base_Spawn;
         public InputActionMap Get() { return m_Wrapper.m_Base; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -293,6 +297,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Scan.started += instance.OnScan;
             @Scan.performed += instance.OnScan;
             @Scan.canceled += instance.OnScan;
+            @Spawn.started += instance.OnSpawn;
+            @Spawn.performed += instance.OnSpawn;
+            @Spawn.canceled += instance.OnSpawn;
         }
 
         private void UnregisterCallbacks(IBaseActions instance)
@@ -300,6 +307,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Scan.started -= instance.OnScan;
             @Scan.performed -= instance.OnScan;
             @Scan.canceled -= instance.OnScan;
+            @Spawn.started -= instance.OnSpawn;
+            @Spawn.performed -= instance.OnSpawn;
+            @Spawn.canceled -= instance.OnSpawn;
         }
 
         public void RemoveCallbacks(IBaseActions instance)
@@ -317,52 +327,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         }
     }
     public BaseActions @Base => new BaseActions(this);
-
-    // UI
-    private readonly InputActionMap m_UI;
-    private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
-    private readonly InputAction m_UI_Count;
-    public struct UIActions
-    {
-        private @PlayerInput m_Wrapper;
-        public UIActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Count => m_Wrapper.m_UI_Count;
-        public InputActionMap Get() { return m_Wrapper.m_UI; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(UIActions set) { return set.Get(); }
-        public void AddCallbacks(IUIActions instance)
-        {
-            if (instance == null || m_Wrapper.m_UIActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_UIActionsCallbackInterfaces.Add(instance);
-            @Count.started += instance.OnCount;
-            @Count.performed += instance.OnCount;
-            @Count.canceled += instance.OnCount;
-        }
-
-        private void UnregisterCallbacks(IUIActions instance)
-        {
-            @Count.started -= instance.OnCount;
-            @Count.performed -= instance.OnCount;
-            @Count.canceled -= instance.OnCount;
-        }
-
-        public void RemoveCallbacks(IUIActions instance)
-        {
-            if (m_Wrapper.m_UIActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        public void SetCallbacks(IUIActions instance)
-        {
-            foreach (var item in m_Wrapper.m_UIActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_UIActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
-    }
-    public UIActions @UI => new UIActions(this);
     private int m_KeyboardandMouseSchemeIndex = -1;
     public InputControlScheme KeyboardandMouseScheme
     {
@@ -379,9 +343,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     public interface IBaseActions
     {
         void OnScan(InputAction.CallbackContext context);
-    }
-    public interface IUIActions
-    {
-        void OnCount(InputAction.CallbackContext context);
+        void OnSpawn(InputAction.CallbackContext context);
     }
 }

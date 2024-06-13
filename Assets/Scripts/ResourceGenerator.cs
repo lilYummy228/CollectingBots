@@ -12,6 +12,7 @@ public class ResourceGenerator : MonoBehaviour
     [SerializeField, Range(1, 12)] private float _spawnDelay;
     [SerializeField, Range(0, 1)] private int _minSpawnCount;
     [SerializeField, Range(1, 5)] private int _maxSpawnCount;
+    [SerializeField, Range(12, 24)] private int _spawnLimit;
 
     private WaitForSeconds _delay;
 
@@ -29,17 +30,20 @@ public class ResourceGenerator : MonoBehaviour
     {
         while (enabled)
         {
-            int spawnCount = Random.Range(_minSpawnCount, _maxSpawnCount + 1);
-
-            for (int i = 0; i < spawnCount; i++)
+            if (Resources.Count < _spawnLimit)
             {
-                float spawnPointX = Random.Range(_map.BoundsX, _map.BoundsZ);
-                float spawnPointZ = Random.Range(_map.BoundsX, _map.BoundsZ);
-                Vector3 spawnPoint = new Vector3(spawnPointX, 0f, spawnPointZ);
+                int spawnCount = Random.Range(_minSpawnCount, _maxSpawnCount + 1);
 
-                Resource resource = _pool.GetResource();
-                resource.transform.position = spawnPoint;
-                Resources.Add(resource);
+                for (int i = 0; i < spawnCount; i++)
+                {
+                    float spawnPointX = Random.Range(_map.BoundsX, _map.BoundsZ);
+                    float spawnPointZ = Random.Range(_map.BoundsX, _map.BoundsZ);
+                    Vector3 spawnPoint = new Vector3(spawnPointX, 0f, spawnPointZ);
+
+                    Resource resource = _pool.GetResource();
+                    resource.transform.position = spawnPoint;
+                    Resources.Add(resource);
+                }
             }
 
             yield return _delay;
