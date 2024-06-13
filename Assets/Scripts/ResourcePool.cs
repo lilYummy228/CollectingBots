@@ -6,7 +6,7 @@ public class ResourcePool : MonoBehaviour
     [SerializeField] private Resource[] _resources;
     [SerializeField] private Transform _container;
 
-    private Queue<Resource> _pool = new();
+    public Queue<Resource> _pool = new();
 
     public Resource GetResource()
     {

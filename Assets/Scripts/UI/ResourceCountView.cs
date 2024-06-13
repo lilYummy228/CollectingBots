@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ResourceCountView : MonoBehaviour
 {
-    [SerializeField] private ResourceCounter _resourceCounter;
+    [SerializeField] private ResourceStorage _resourceCounter;
     [SerializeField] private TextMeshProUGUI _count;
 
     private void OnEnable() => _resourceCounter.ResourceAdded += ShowInfo;

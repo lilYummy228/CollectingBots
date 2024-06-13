@@ -34,7 +34,7 @@ public class Bot : MonoBehaviour
             MoveTo(resource.transform);
         }
 
-        resource.PickUp(gameObject.transform, _holdDistance);
+        resource.PickUp(transform, _holdDistance);
 
         while (resource.isActiveAndEnabled)
         {

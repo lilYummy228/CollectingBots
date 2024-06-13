@@ -8,20 +8,19 @@ public class ResourceGenerator : MonoBehaviour
     [SerializeField] private ResourcePool _pool;
     [SerializeField] private Base _base;
 
-    [Header("Spawn Settings")]
-    [SerializeField, Range(1, 12)] private float _spawnDelay;
-    [SerializeField, Range(0, 1)] private int _minSpawnCount;
-    [SerializeField, Range(1, 5)] private int _maxSpawnCount;
-    [SerializeField, Range(12, 24)] private int _spawnLimit;
+    [Header("Resources Spawn Settings")]
+    [SerializeField] private float _spawnDelay;
+    [SerializeField] private int _minSpawnCount = 1;
+    [SerializeField] private int _maxSpawnCount = 6;
+    [SerializeField] private int _spawnLimit = 24;
 
     private WaitForSeconds _delay;
 
-    public List<Resource> Resources { get; private set; }
+    public List<Resource> Resources { get; private set; } = new();
 
     private void Awake()
     {
         _delay = new WaitForSeconds(_spawnDelay);
-        Resources = new List<Resource>();
 
         StartCoroutine(nameof(SpawnResources));
     }
@@ -50,10 +49,7 @@ public class ResourceGenerator : MonoBehaviour
         }
     }
 
-    public void RemoveResource(Resource resource)
-    {
-        _pool.PutResource(resource);
-    }
+    public void RemoveResource(Resource resource) => _pool.PutResource(resource);
 
     public void ShowResources()
     {

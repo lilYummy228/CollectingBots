@@ -116,6 +116,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PutFlag"",
+                    ""type"": ""Value"",
+                    ""id"": ""5b34e9c7-22ca-482e-89b7-d1c3138a95ed"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -138,6 +147,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard and Mouse"",
                     ""action"": ""Spawn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7cc08895-66ff-48b7-819d-71e4dd7723f0"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""PutFlag"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -170,6 +190,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Base = asset.FindActionMap("Base", throwIfNotFound: true);
         m_Base_Scan = m_Base.FindAction("Scan", throwIfNotFound: true);
         m_Base_Spawn = m_Base.FindAction("Spawn", throwIfNotFound: true);
+        m_Base_PutFlag = m_Base.FindAction("PutFlag", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -279,12 +300,14 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private List<IBaseActions> m_BaseActionsCallbackInterfaces = new List<IBaseActions>();
     private readonly InputAction m_Base_Scan;
     private readonly InputAction m_Base_Spawn;
+    private readonly InputAction m_Base_PutFlag;
     public struct BaseActions
     {
         private @PlayerInput m_Wrapper;
         public BaseActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Scan => m_Wrapper.m_Base_Scan;
         public InputAction @Spawn => m_Wrapper.m_Base_Spawn;
+        public InputAction @PutFlag => m_Wrapper.m_Base_PutFlag;
         public InputActionMap Get() { return m_Wrapper.m_Base; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -300,6 +323,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Spawn.started += instance.OnSpawn;
             @Spawn.performed += instance.OnSpawn;
             @Spawn.canceled += instance.OnSpawn;
+            @PutFlag.started += instance.OnPutFlag;
+            @PutFlag.performed += instance.OnPutFlag;
+            @PutFlag.canceled += instance.OnPutFlag;
         }
 
         private void UnregisterCallbacks(IBaseActions instance)
@@ -310,6 +336,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Spawn.started -= instance.OnSpawn;
             @Spawn.performed -= instance.OnSpawn;
             @Spawn.canceled -= instance.OnSpawn;
+            @PutFlag.started -= instance.OnPutFlag;
+            @PutFlag.performed -= instance.OnPutFlag;
+            @PutFlag.canceled -= instance.OnPutFlag;
         }
 
         public void RemoveCallbacks(IBaseActions instance)
@@ -344,5 +373,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     {
         void OnScan(InputAction.CallbackContext context);
         void OnSpawn(InputAction.CallbackContext context);
+        void OnPutFlag(InputAction.CallbackContext context);
     }
 }
