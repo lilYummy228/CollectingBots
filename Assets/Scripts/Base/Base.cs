@@ -2,13 +2,14 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerInput), typeof(BotSpawner), typeof(ResourceStorage))]
-[RequireComponent(typeof(Researcher))]
+[RequireComponent(typeof(Researcher), typeof(BaseFlagSetter))]
 public class Base : MonoBehaviour
 {
     [SerializeField] private ParticleSystem _scanEffect;
     [SerializeField] private float _scanCooldown = 6f;
     [SerializeField] private int _botSpawnCount = 3;
 
+    private BaseFlagSetter _baseFlagSetter;
     private ResourceStorage _resourceStorage;
     private Researcher _researcher;
     private BotSpawner _spawner;
@@ -17,6 +18,8 @@ public class Base : MonoBehaviour
 
     private void Awake()
     {
+        _baseFlagSetter = GetComponent<BaseFlagSetter>();
+
         _resourceStorage = GetComponent<ResourceStorage>();
 
         _researcher = GetComponent<Researcher>();
@@ -27,6 +30,7 @@ public class Base : MonoBehaviour
         _playerInput = new PlayerInput();
         _playerInput.Base.Scan.performed += OnScan;
         _playerInput.Base.Spawn.performed += OnSpawn;
+        _playerInput.Base.Migrate.performed += OnMigrate;
 
         StartCoroutine(_researcher.SendBots(_spawner.SpawnedBots));
     }
@@ -44,7 +48,7 @@ public class Base : MonoBehaviour
 
     private void OnDisable() => _playerInput.Disable();
 
-    public void OnScan(InputAction.CallbackContext context)
+    private void OnScan(InputAction.CallbackContext context)
     {
         if (_cooldown <= Time.time)
         {
@@ -56,6 +60,8 @@ public class Base : MonoBehaviour
         }
     }
 
+    public void TakeResource(Resource resource) => _researcher.ResourceGenerator.Resources.Remove(resource);
+
     private void OnSpawn(InputAction.CallbackContext context)
     {
         if (_resourceStorage.ResourceCount >= _spawner.BotSpawnPrice)
@@ -66,5 +72,5 @@ public class Base : MonoBehaviour
         }
     }
 
-    public void TakeResource(Resource resource) => _researcher.ResourceGenerator.Resources.Remove(resource);
+    private void OnMigrate(InputAction.CallbackContext context) => _baseFlagSetter.TrySetFlag();
 }

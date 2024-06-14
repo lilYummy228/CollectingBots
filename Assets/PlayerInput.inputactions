@@ -96,13 +96,13 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "PutFlag",
-                    "type": "Value",
+                    "name": "Migrate",
+                    "type": "Button",
                     "id": "5b34e9c7-22ca-482e-89b7-d1c3138a95ed",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -135,7 +135,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard and Mouse",
-                    "action": "PutFlag",
+                    "action": "Migrate",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
