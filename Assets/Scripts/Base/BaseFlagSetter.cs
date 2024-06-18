@@ -1,40 +1,38 @@
+using System;
 using UnityEngine;
 
+[RequireComponent(typeof(Selector))]
 public class BaseFlagSetter : MonoBehaviour
 {
     [SerializeField] private Flag _flag;
     [SerializeField] private Camera _camera;
 
-    private Selector<Base> _selector;
+    private Selector _selector;
+    private float _offset = 3f;
     private bool _isBaseSelected = false;
 
-    private void Awake()
-    {
-        _selector = new Selector<Base>(_camera);
-    }
+    public event Action<Flag> FlagSet;
+
+    private void Awake() => _selector = GetComponent<Selector>();
 
     public void TrySetFlag()
     {
-        Base @base = _selector.GetSelected();
+        ISelectable selected = _selector.GetSelected(_camera);
 
-        if (@base is Base)
-        {
+        if (selected is Base)
             _isBaseSelected = true;
-        }
-        else if (@base is not Base && _isBaseSelected)
-        {
+        else if (selected is Map && _isBaseSelected)
             SetFlag(_selector.Position);
-
-            _isBaseSelected = false;
-        }
-
     }
 
     private void SetFlag(Vector3 position)
     {
         if (_flag.isActiveAndEnabled == false)
+        {
             _flag.gameObject.SetActive(true);
+            _flag.transform.position = position + Vector3.up * _offset;
 
-        _flag.transform.position = position;
+            FlagSet?.Invoke(_flag);
+        }
     }
 }

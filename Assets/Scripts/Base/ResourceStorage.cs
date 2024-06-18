@@ -10,5 +10,4 @@ public class ResourceStorage : MonoBehaviour
     public void AddResource() => ResourceAdded?.Invoke(++ResourceCount);
 
     public void RemoveResource(int count) => ResourceAdded?.Invoke(ResourceCount -= count);
-
 }

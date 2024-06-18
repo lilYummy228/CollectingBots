@@ -10,10 +10,12 @@ public class BotSpawner : MonoBehaviour
 
     private float _minSpawnRange;
 
-    public List<Bot> SpawnedBots { get; private set; } = new();
+    public List<Bot> SpawnedBots { get; private set; }
     public int BotSpawnPrice => _botSpawnPrice;
 
     private void Awake() => _minSpawnRange = -_maxSpawnRange;
+
+    private void OnEnable() => SpawnedBots = new List<Bot>();
 
     public void SpawnBots(int count)
     {
@@ -28,6 +30,12 @@ public class BotSpawner : MonoBehaviour
             SpawnedBots.Add(bot);
             bot.transform.parent = _botsContainer.transform;
             bot.transform.position = spawnpoint;
+            bot.SetBase(gameObject.GetComponent<Base>());
         }
+    }
+
+    public void RemoveBot(Bot bot)
+    {
+        SpawnedBots.Remove(bot);
     }
 }

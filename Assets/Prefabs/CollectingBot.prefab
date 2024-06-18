@@ -147,5 +147,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: 10
-  _base: {fileID: 0}
-  _container: {fileID: 0}
+  _constructedBase: {fileID: 6524185434698358741, guid: 80235f9100f02114884328c67ade0111, type: 3}

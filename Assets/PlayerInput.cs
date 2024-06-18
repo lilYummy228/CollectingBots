@@ -118,7 +118,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Migrate"",
+                    ""name"": ""Select"",
                     ""type"": ""Button"",
                     ""id"": ""5b34e9c7-22ca-482e-89b7-d1c3138a95ed"",
                     ""expectedControlType"": ""Button"",
@@ -157,7 +157,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard and Mouse"",
-                    ""action"": ""Migrate"",
+                    ""action"": ""Select"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -190,7 +190,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Base = asset.FindActionMap("Base", throwIfNotFound: true);
         m_Base_Scan = m_Base.FindAction("Scan", throwIfNotFound: true);
         m_Base_Spawn = m_Base.FindAction("Spawn", throwIfNotFound: true);
-        m_Base_Migrate = m_Base.FindAction("Migrate", throwIfNotFound: true);
+        m_Base_Select = m_Base.FindAction("Select", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -300,14 +300,14 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private List<IBaseActions> m_BaseActionsCallbackInterfaces = new List<IBaseActions>();
     private readonly InputAction m_Base_Scan;
     private readonly InputAction m_Base_Spawn;
-    private readonly InputAction m_Base_Migrate;
+    private readonly InputAction m_Base_Select;
     public struct BaseActions
     {
         private @PlayerInput m_Wrapper;
         public BaseActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Scan => m_Wrapper.m_Base_Scan;
         public InputAction @Spawn => m_Wrapper.m_Base_Spawn;
-        public InputAction @Migrate => m_Wrapper.m_Base_Migrate;
+        public InputAction @Select => m_Wrapper.m_Base_Select;
         public InputActionMap Get() { return m_Wrapper.m_Base; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -323,9 +323,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Spawn.started += instance.OnSpawn;
             @Spawn.performed += instance.OnSpawn;
             @Spawn.canceled += instance.OnSpawn;
-            @Migrate.started += instance.OnMigrate;
-            @Migrate.performed += instance.OnMigrate;
-            @Migrate.canceled += instance.OnMigrate;
+            @Select.started += instance.OnSelect;
+            @Select.performed += instance.OnSelect;
+            @Select.canceled += instance.OnSelect;
         }
 
         private void UnregisterCallbacks(IBaseActions instance)
@@ -336,9 +336,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Spawn.started -= instance.OnSpawn;
             @Spawn.performed -= instance.OnSpawn;
             @Spawn.canceled -= instance.OnSpawn;
-            @Migrate.started -= instance.OnMigrate;
-            @Migrate.performed -= instance.OnMigrate;
-            @Migrate.canceled -= instance.OnMigrate;
+            @Select.started -= instance.OnSelect;
+            @Select.performed -= instance.OnSelect;
+            @Select.canceled -= instance.OnSelect;
         }
 
         public void RemoveCallbacks(IBaseActions instance)
@@ -373,6 +373,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     {
         void OnScan(InputAction.CallbackContext context);
         void OnSpawn(InputAction.CallbackContext context);
-        void OnMigrate(InputAction.CallbackContext context);
+        void OnSelect(InputAction.CallbackContext context);
     }
 }

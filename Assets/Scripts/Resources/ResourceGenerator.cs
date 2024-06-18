@@ -6,7 +6,6 @@ public class ResourceGenerator : MonoBehaviour
 {
     [SerializeField] private Map _map;
     [SerializeField] private ResourcePool _pool;
-    [SerializeField] private Base _base;
 
     [Header("Resources Spawn Settings")]
     [SerializeField] private float _spawnDelay;
@@ -16,10 +15,11 @@ public class ResourceGenerator : MonoBehaviour
 
     private WaitForSeconds _delay;
 
-    public List<Resource> Resources { get; private set; } = new();
+    public List<Resource> Resources { get; private set; }
 
     private void Awake()
     {
+        Resources = new();
         _delay = new WaitForSeconds(_spawnDelay);
 
         StartCoroutine(nameof(SpawnResources));

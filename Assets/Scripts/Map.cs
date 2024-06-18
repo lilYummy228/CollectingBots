@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Map : MonoBehaviour
+public class Map : MonoBehaviour, ISelectable
 {
     [SerializeField] private Terrain _terrain;
 

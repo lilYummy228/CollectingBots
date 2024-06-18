@@ -1,24 +1,17 @@
 using UnityEngine;
 
-public class Selector<T> where T : MonoBehaviour
+public class Selector : MonoBehaviour
 {
-    private Camera _camera;
-
-    public Selector(Camera camera)
-    {
-        _camera = camera;
-    }
-
     public Vector3 Position { get; private set; }
 
-    public T GetSelected()
+    public ISelectable GetSelected(Camera camera)
     {
-        if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out RaycastHit hit))
+        if (Physics.Raycast(camera.ScreenPointToRay(Input.mousePosition), out RaycastHit hit))
         {
             Position = hit.point;
 
-            if (hit.transform.TryGetComponent(out T component))
-                return component;
+            if (hit.transform.TryGetComponent(out ISelectable selected))
+                return selected;
         }
 
         return null;
