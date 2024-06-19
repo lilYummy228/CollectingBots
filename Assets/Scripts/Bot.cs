@@ -12,17 +12,15 @@ public class Bot : MonoBehaviour, ISelectable
     private float _holdDistance = 1.5f;
     private Base _currentBase;
 
-    private void OnEnable()
-    {
-        _resourceContainer = GameObject.Find("ResourcePool").GetComponent<Transform>();
-    }
-
     public Coroutine ExplorationCoroutine { get; private set; }
+
+    private void OnEnable() => _resourceContainer = GameObject.Find("ResourcePool").GetComponent<Transform>();
 
     private IEnumerator GatherResource(Resource resource)
     {
-        bool isFound = false;
         _currentBase.TakeResource(resource);
+
+        bool isFound = false;
 
         while (isFound == false)
         {
@@ -68,10 +66,7 @@ public class Bot : MonoBehaviour, ISelectable
         newBase.Spawner.SpawnedBots.Add(this);
     }
 
-    public void SetBase(Base @base)
-    {
-        _currentBase = @base;
-    }
+    public void SetBase(Base @base) => _currentBase = @base;
 
     public void StartExploration(Resource resource) => ExplorationCoroutine = StartCoroutine(GatherResource(resource));
 

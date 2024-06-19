@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Researcher))]
 public class Base : MonoBehaviour
 {
+    private const int Unit = 1;
+
     private Scanner _scanner;
     private Researcher _researcher;
 
@@ -53,7 +55,7 @@ public class Base : MonoBehaviour
         {
             ResourceStorage.RemoveResource(Spawner.BotSpawnPrice);
 
-            Spawner.SpawnBots(1);
+            Spawner.SpawnBots(Unit);
         }
     }
 }
