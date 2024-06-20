@@ -13,13 +13,11 @@ public class ResourceGenerator : MonoBehaviour
     [SerializeField] private int _maxSpawnCount = 6;
     [SerializeField] private int _spawnLimit = 24;
 
+    private List<Resource> _resources = new();
     private WaitForSeconds _delay;
-
-    public List<Resource> Resources { get; private set; }
 
     private void Awake()
     {
-        Resources = new();
         _delay = new WaitForSeconds(_spawnDelay);
 
         StartCoroutine(nameof(SpawnResources));
@@ -29,7 +27,7 @@ public class ResourceGenerator : MonoBehaviour
     {
         while (enabled)
         {
-            if (Resources.Count < _spawnLimit)
+            if (_resources.Count < _spawnLimit)
             {
                 int spawnCount = Random.Range(_minSpawnCount, _maxSpawnCount + 1);
 
@@ -40,8 +38,9 @@ public class ResourceGenerator : MonoBehaviour
                     Vector3 spawnPoint = new Vector3(spawnPointX, 0f, spawnPointZ);
 
                     Resource resource = _pool.GetResource();
+                    resource.gameObject.SetActive(true);
                     resource.transform.position = spawnPoint;
-                    Resources.Add(resource);
+                    _resources.Add(resource);
                 }
             }
 
@@ -49,11 +48,20 @@ public class ResourceGenerator : MonoBehaviour
         }
     }
 
-    public void RemoveResource(Resource resource) => _pool.PutResource(resource);
-
-    public void ShowResources()
+    public void PutResource(Resource resource)
     {
-        foreach (Resource resource in Resources)
-            resource.gameObject.SetActive(true);
+        _pool.PutResource(resource);
+    }
+
+    public void RemoveResource(Resource resource) => _resources.Remove(resource);
+
+    public int GetCount()
+    {
+        return _resources.Count;
+    }
+
+    public Resource GetResourceByIndex(int index)
+    {
+        return _resources[index];
     }
 }

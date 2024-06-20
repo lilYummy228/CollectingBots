@@ -19,7 +19,7 @@ public class BaseFlagSetter : MonoBehaviour
     {
         ISelectable selected = _selector.GetSelected(_camera);
 
-        if (selected is Base)
+        if (selected is MainBase)
             _isBaseSelected = true;
         else if (selected is Map && _isBaseSelected)
             SetFlag(_selector.Position);

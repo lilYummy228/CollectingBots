@@ -1,61 +1,82 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(PlayerInput), typeof(BotSpawner), typeof(Scanner))]
-[RequireComponent(typeof(Researcher))]
+[RequireComponent(typeof(PlayerInput), typeof(BotSpawner))]
 public class Base : MonoBehaviour
 {
     private const int Unit = 1;
 
-    private Scanner _scanner;
-    private Researcher _researcher;
+    [SerializeField] private Researcher _researcher;
+    [SerializeField] private ResourceStorage _resourceStorage;
+    [SerializeField] protected Transform _botsContainer;
 
-    public ResourceStorage ResourceStorage { get; protected set; }
-    public BotSpawner Spawner { get; protected set; }
-    public PlayerInput PlayerInput { get; protected set; }
-    public WaitForFixedUpdate WaitForFixedUpdate { get; protected set; }
+    protected List<Bot> _bots = new();
+    protected PlayerInput _playerInput;
+    protected BotSpawner _spawner;
 
     private void Awake()
     {
-        PlayerInput = new PlayerInput();
-        PlayerInput.Base.Scan.performed += OnScan;
-        PlayerInput.Base.Spawn.performed += OnSpawn;
+        _playerInput = new PlayerInput();
 
-        _scanner = GetComponent<Scanner>();
+        _playerInput.Base.Spawn.performed += OnSpawn;
 
-        _researcher = GetComponent<Researcher>();
-
-        ResourceStorage = GameObject.Find("ResourceStorage").GetComponent<ResourceStorage>();
-
-        Spawner = GetComponent<BotSpawner>();
+        _spawner = GetComponent<BotSpawner>();
     }
 
-    public virtual void OnEnable() => PlayerInput.Enable();
+    public virtual void OnEnable() => _playerInput.Enable();
 
-    public virtual void OnDisable() => PlayerInput.Disable();
-
-    public virtual void Start() => StartCoroutine(_researcher.SendBots(Spawner.SpawnedBots));
+    public virtual void OnDisable() => _playerInput.Disable();
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out Resource resource))
         {
-            _researcher.ResourceGenerator.RemoveResource(resource);
-            ResourceStorage.AddResource();
+            _researcher.ResourceGenerator.PutResource(resource);
+            _resourceStorage.AddResource();
         }
     }
 
-    public void TakeResource(Resource resource) => _researcher.ResourceGenerator.Resources.Remove(resource);
-
-    private void OnScan(InputAction.CallbackContext context) => _scanner.Scan(_researcher);
+    public void TakeResource(Resource resource)
+    {
+        _researcher.ResourceGenerator.RemoveResource(resource);
+    }
 
     private void OnSpawn(InputAction.CallbackContext context)
     {
-        if (ResourceStorage.ResourceCount >= Spawner.BotSpawnPrice)
+        if (_resourceStorage.ResourceCount >= _spawner.BotSpawnPrice)
         {
-            ResourceStorage.RemoveResource(Spawner.BotSpawnPrice);
+            _resourceStorage.RemoveResources(_spawner.BotSpawnPrice);
 
-            Spawner.SpawnBots(Unit);
+            _bots.AddRange(_spawner.SpawnBots(Unit, _botsContainer));
+        }
+    }
+
+    public void Init(Researcher researcher, ResourceStorage resourceStorage)
+    {
+        _researcher = researcher;
+        _resourceStorage = resourceStorage;
+    }
+
+    public void RemoveBot(Bot bot)
+    {
+        _bots?.Remove(bot);
+    }
+
+    public void AddBot(Bot bot)
+    {
+        _bots.Add(bot);
+    }
+
+    public void Explore(Resource resource)
+    {
+        foreach (Bot bot in _bots)
+        {
+            if (bot.ExplorationCoroutine == null)
+            {
+                bot.StartExploration(resource);
+                break;
+            }
         }
     }
 }

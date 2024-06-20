@@ -7,15 +7,16 @@ public class Scanner : MonoBehaviour
 
     private float _cooldown = 0f;
 
-    public void Scan(Researcher researcher)
+    public bool HasScan()
     {
         if (_cooldown <= Time.time)
         {
             _scanEffect.Play();
-
-            researcher.ResourceGenerator.ShowResources();
-
             _cooldown = Time.time + _scanCooldown;
+
+            return true;
         }
+
+        return false;
     }
 }

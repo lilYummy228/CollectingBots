@@ -1,42 +1,53 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(PlayerInput))]
 public class Researcher : MonoBehaviour
 {
-    public ResourceGenerator ResourceGenerator;
+    [SerializeField] private ResourceGenerator _resourceGenerator;
+    [SerializeField] private Scanner _scanner;
+    [SerializeField] private Base _base;
 
-    private WaitForFixedUpdate _waitForFixedUpdate = new();
+    private PlayerInput _playerInput;
+    private List<Base> _bases = new();
 
-    private void Awake() => ResourceGenerator = 
-        GameObject.Find("ResourceGenerator").GetComponent<ResourceGenerator>();
+    public ResourceGenerator ResourceGenerator => _resourceGenerator;
 
-    public IEnumerator SendBots(List<Bot> bots)
+    private void Awake()
     {
-        while (enabled)
-        {
-            if (ResourceGenerator.Resources.Count > 0)
-                Explore(bots);
+        _playerInput = new PlayerInput();
+        _playerInput.Base.Scan.performed += OnScan;
 
-            yield return _waitForFixedUpdate;
+        _bases.Add(_base);
+    }
+
+    private void OnEnable() => _playerInput.Enable();
+
+    private void OnDisable() => _playerInput.Disable();
+
+    private void OnScan(InputAction.CallbackContext context)
+    {
+        if (_scanner.HasScan())
+            Explore();
+    }
+
+    private void Explore()
+    {
+        foreach (Base @base in _bases)
+        {
+            int count = _resourceGenerator.GetCount();
+
+            for (int i = 0; i < count; i++)
+            {
+                Resource resource = _resourceGenerator.GetResourceByIndex(0);
+                @base.Explore(resource);
+            }
         }
     }
 
-    private void Explore(List<Bot> bots)
+    public void AddBase(Base @base)
     {
-        Resource resource = ResourceGenerator.Resources[0];
-
-        if (resource.isActiveAndEnabled)
-        {
-            foreach (Bot bot in bots)
-            {
-                if (bot.ExplorationCoroutine == null)
-                {
-                    bot.StartExploration(resource);
-                    break;
-                }
-            }
-        }
-
+        _bases.Add(@base);
     }
 }

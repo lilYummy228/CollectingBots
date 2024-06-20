@@ -4,17 +4,15 @@ using UnityEngine;
 public class Bot : MonoBehaviour, ISelectable
 {
     [SerializeField] private float _moveSpeed;
-    [SerializeField] private Base _constructedBase;
 
     private WaitForFixedUpdate _waitForFixedUpdate;
-    private Transform _resourceContainer;
+    public BaseSpawner _baseSpawner;
+    public Transform _resourceContainer;
+    private Base _currentBase;
     private float _lookDistance = 2.5f;
     private float _holdDistance = 1.5f;
-    private Base _currentBase;
 
     public Coroutine ExplorationCoroutine { get; private set; }
-
-    private void OnEnable() => _resourceContainer = GameObject.Find("ResourcePool").GetComponent<Transform>();
 
     private IEnumerator GatherResource(Resource resource)
     {
@@ -45,7 +43,7 @@ public class Bot : MonoBehaviour, ISelectable
         ExplorationCoroutine = null;
     }
 
-    private IEnumerator Build(Flag flag)
+    private IEnumerator BuildBase(Flag flag)
     {
         bool isFound = false;
 
@@ -58,19 +56,26 @@ public class Bot : MonoBehaviour, ISelectable
             yield return _waitForFixedUpdate;
         }
 
-        flag.gameObject.SetActive(false);
-
-        Base newBase = Instantiate(_constructedBase, flag.transform.position, Quaternion.identity);
-        _currentBase.Spawner.SpawnedBots.Remove(this);
+        _currentBase.RemoveBot(this);
+        Base newBase = _baseSpawner.GetNewBase(flag);
         _currentBase = newBase;
-        newBase.Spawner.SpawnedBots.Add(this);
+        newBase.AddBot(this);
     }
 
-    public void SetBase(Base @base) => _currentBase = @base;
+    public void SetBase(Base @base)
+    {
+        _currentBase = @base;
+    }
+
+    public void Init(Transform container, BaseSpawner baseSpawner)
+    {
+        _resourceContainer = container;
+        _baseSpawner = baseSpawner;
+    }
 
     public void StartExploration(Resource resource) => ExplorationCoroutine = StartCoroutine(GatherResource(resource));
 
-    public void StartBuild(Flag flag) => StartCoroutine(Build(flag));
+    public void StartBuild(Flag flag) => StartCoroutine(BuildBase(flag));
 
     private void MoveTo(Transform target)
     {

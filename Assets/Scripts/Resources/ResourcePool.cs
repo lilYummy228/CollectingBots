@@ -16,7 +16,6 @@ public class ResourcePool : MonoBehaviour
 
             Resource resource = Instantiate(_resources[resourceIndex]);
             resource.transform.parent = _container;
-            resource.gameObject.SetActive(false);
 
             return resource;
         }

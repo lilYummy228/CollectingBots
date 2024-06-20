@@ -1,13 +1,13 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class MainBase : Base, ISelectable
 {
+    [SerializeField] private BaseFlagSetter _baseFlagSetter;
     [SerializeField] private int _botSpawnCount = 3;
     [SerializeField] private int _baseBuildPrice = 5;
 
-    [SerializeField] private BaseFlagSetter _baseFlagSetter;  
+    private BaseSpawner _baseSpawner;
 
     public override void OnEnable()
     {
@@ -21,43 +21,24 @@ public class MainBase : Base, ISelectable
         _baseFlagSetter.FlagSet -= StartBuildBase;
     }
 
-    public override void Start()
+    public void Start()
     {
-        base.Start();
-        Spawner.SpawnBots(_botSpawnCount);
-        PlayerInput.Base.Select.performed += OnSelect;
+        _bots.AddRange(_spawner.SpawnBots(_botSpawnCount, _botsContainer));
+        _playerInput.Base.Select.performed += OnSelect;
     }
 
-    private void OnSelect(InputAction.CallbackContext context) => _baseFlagSetter.TrySetFlag();
-
-    private void StartBuildBase(Flag flag) => StartCoroutine(BuildNewBase(flag));
-
-    private IEnumerator BuildNewBase(Flag flag)
+    private void OnSelect(InputAction.CallbackContext context)
     {
-        bool isFreeBotFound = false;
+        _baseFlagSetter.TrySetFlag();
+    }
 
-        while (isFreeBotFound == false)
-        {
-            if (ResourceStorage.ResourceCount >= _baseBuildPrice)
-            {
-                foreach (Bot bot in Spawner.SpawnedBots)
-                {
-                    if (bot.ExplorationCoroutine == null)
-                    {
-                        Spawner.RemoveBot(bot);
-
-                        ResourceStorage.RemoveResource(_baseBuildPrice);
-
-                        bot.StartBuild(flag);
-
-                        isFreeBotFound = true;
-
-                        break;
-                    }
-                }
-            }
-
-            yield return WaitForFixedUpdate;
-        }
+    private void StartBuildBase(Flag flag)
+    {
+        StartCoroutine(_baseSpawner.BuildNewBase(flag, _baseBuildPrice, _bots, this));
+    }
+    
+    public void SetBaseSpawner(BaseSpawner baseSpawner)
+    {
+        _baseSpawner = baseSpawner;
     }
 }
