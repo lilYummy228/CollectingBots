@@ -23,6 +23,23 @@ public class ResourceGenerator : MonoBehaviour
         StartCoroutine(nameof(SpawnResources));
     }
 
+    public void PutResource(Resource resource)
+    {
+        _pool.PutResource(resource);
+    }
+
+    public void RemoveResource(Resource resource) => _resources.Remove(resource);
+
+    public int GetCount()
+    {
+        return _resources.Count;
+    }
+
+    public Resource GetResourceByIndex(int index)
+    {
+        return _resources[index];
+    }
+
     private IEnumerator SpawnResources()
     {
         while (enabled)
@@ -46,22 +63,5 @@ public class ResourceGenerator : MonoBehaviour
 
             yield return _delay;
         }
-    }
-
-    public void PutResource(Resource resource)
-    {
-        _pool.PutResource(resource);
-    }
-
-    public void RemoveResource(Resource resource) => _resources.Remove(resource);
-
-    public int GetCount()
-    {
-        return _resources.Count;
-    }
-
-    public Resource GetResourceByIndex(int index)
-    {
-        return _resources[index];
     }
 }

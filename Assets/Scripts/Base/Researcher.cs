@@ -26,6 +26,11 @@ public class Researcher : MonoBehaviour
 
     private void OnDisable() => _playerInput.Disable();
 
+    public void AddBase(Base @base)
+    {
+        _bases.Add(@base);
+    }
+
     private void OnScan(InputAction.CallbackContext context)
     {
         if (_scanner.HasScan())
@@ -44,10 +49,5 @@ public class Researcher : MonoBehaviour
                 @base.Explore(resource);
             }
         }
-    }
-
-    public void AddBase(Base @base)
-    {
-        _bases.Add(@base);
     }
 }

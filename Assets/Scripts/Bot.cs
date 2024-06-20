@@ -5,14 +5,18 @@ public class Bot : MonoBehaviour, ISelectable
 {
     [SerializeField] private float _moveSpeed;
 
-    private WaitForFixedUpdate _waitForFixedUpdate;
     public BaseSpawner _baseSpawner;
     public Transform _resourceContainer;
+    private WaitForFixedUpdate _waitForFixedUpdate;
     private Base _currentBase;
     private float _lookDistance = 2.5f;
     private float _holdDistance = 1.5f;
 
     public Coroutine ExplorationCoroutine { get; private set; }
+
+    public void StartBuild(Flag flag) => StartCoroutine(BuildBase(flag));
+
+    public void StartExploration(Resource resource) => ExplorationCoroutine = StartCoroutine(GatherResource(resource));
 
     private IEnumerator GatherResource(Resource resource)
     {
@@ -72,10 +76,6 @@ public class Bot : MonoBehaviour, ISelectable
         _resourceContainer = container;
         _baseSpawner = baseSpawner;
     }
-
-    public void StartExploration(Resource resource) => ExplorationCoroutine = StartCoroutine(GatherResource(resource));
-
-    public void StartBuild(Flag flag) => StartCoroutine(BuildBase(flag));
 
     private void MoveTo(Transform target)
     {

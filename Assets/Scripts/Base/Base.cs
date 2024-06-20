@@ -42,16 +42,6 @@ public class Base : MonoBehaviour
         _researcher.ResourceGenerator.RemoveResource(resource);
     }
 
-    private void OnSpawn(InputAction.CallbackContext context)
-    {
-        if (_resourceStorage.ResourceCount >= _spawner.BotSpawnPrice)
-        {
-            _resourceStorage.RemoveResources(_spawner.BotSpawnPrice);
-
-            _bots.AddRange(_spawner.SpawnBots(Unit, _botsContainer));
-        }
-    }
-
     public void Init(Researcher researcher, ResourceStorage resourceStorage)
     {
         _researcher = researcher;
@@ -77,6 +67,16 @@ public class Base : MonoBehaviour
                 bot.StartExploration(resource);
                 break;
             }
+        }
+    }
+
+    private void OnSpawn(InputAction.CallbackContext context)
+    {
+        if (_resourceStorage.ResourceCount >= _spawner.BotSpawnPrice)
+        {
+            _resourceStorage.RemoveResources(_spawner.BotSpawnPrice);
+
+            _bots.AddRange(_spawner.SpawnBots(Unit, _botsContainer));
         }
     }
 }

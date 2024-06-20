@@ -27,6 +27,11 @@ public class MainBase : Base, ISelectable
         _playerInput.Base.Select.performed += OnSelect;
     }
 
+    public void SetBaseSpawner(BaseSpawner baseSpawner)
+    {
+        _baseSpawner = baseSpawner;
+    }
+
     private void OnSelect(InputAction.CallbackContext context)
     {
         _baseFlagSetter.TrySetFlag();
@@ -35,10 +40,5 @@ public class MainBase : Base, ISelectable
     private void StartBuildBase(Flag flag)
     {
         StartCoroutine(_baseSpawner.BuildNewBase(flag, _baseBuildPrice, _bots, this));
-    }
-    
-    public void SetBaseSpawner(BaseSpawner baseSpawner)
-    {
-        _baseSpawner = baseSpawner;
-    }
+    }    
 }
