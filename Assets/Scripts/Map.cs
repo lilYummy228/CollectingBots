@@ -16,4 +16,5 @@ public class Map : MonoBehaviour, ISelectable
         BoundsX = _borderOffset;
         BoundsZ = _terrain.terrainData.size.z - _borderOffset;
     }
+
 }
